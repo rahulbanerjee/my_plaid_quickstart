@@ -7,6 +7,8 @@ x-environment:
   PLAID_COUNTRY_CODES: ${PLAID_COUNTRY_CODES}
   PLAID_REDIRECT_URI: ${PLAID_REDIRECT_URI}
   PLAID_ENV: ${PLAID_ENV}
+  APP_PORT: ${APP_PORT}
+  FRONTEND_PORT: ${FRONTEND_PORT}
 services:
   go:
     networks:
@@ -16,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: ./go/Dockerfile
-    ports: ["8000:8000"]
+    ports: ["${APP_PORT}:8000"]
     environment:
       <<: *QUICKSTART_ENVIRONMENT
   java:
@@ -27,7 +29,7 @@ services:
     build:
       context: .
       dockerfile: ./java/Dockerfile
-    ports: ["8000:8000"]
+    ports: ["${APP_PORT}:8000"]
     environment:
       <<: *QUICKSTART_ENVIRONMENT
   node:
@@ -38,7 +40,7 @@ services:
     build:
       context: .
       dockerfile: ./node/Dockerfile
-    ports: ["8000:8000"]
+    ports: ["${APP_PORT}:8000"]
     environment:
       <<: *QUICKSTART_ENVIRONMENT
   python:
@@ -49,7 +51,7 @@ services:
     build:
       context: .
       dockerfile: ./python/Dockerfile
-    ports: ["8000:8000"]
+    ports: ["${APP_PORT}:8000"]
     environment:
       <<: *QUICKSTART_ENVIRONMENT
   ruby:
@@ -60,18 +62,20 @@ services:
     build:
       context: .
       dockerfile: ./ruby/Dockerfile
-    ports: ["8000:8000"]
+    ports: ["${APP_PORT}:8000"]
     environment:
       <<: *QUICKSTART_ENVIRONMENT
   frontend:
     environment:
       - REACT_APP_API_HOST
+      - PORT=${FRONTEND_PORT}
+      - HOST=${FRONTEND_HOST}
     networks:
       - "quickstart"
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
-    ports: ["3000:3000"]
+    ports: ["${FRONTEND_PORT}:${FRONTEND_PORT}"]
 networks:
   quickstart:
     name: quickstart
